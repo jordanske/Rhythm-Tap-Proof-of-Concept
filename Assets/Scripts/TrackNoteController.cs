@@ -13,5 +13,9 @@ public class TrackNoteController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         gameObject.transform.position += new Vector3(0, -speed * Time.deltaTime, 0);
+		if (gameObject.transform.position.y <= -5.5) {
+			Destroy (gameObject);
+			Debug.Log("Miss!");
+		}
 	}
 }
