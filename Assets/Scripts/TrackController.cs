@@ -10,7 +10,7 @@ public class TrackController : MonoBehaviour {
 	}
 
     public void spawnTrackNote() {
-        Instantiate(trackNote);
+        Instantiate(trackNote, transform.position, transform.rotation);
     }
 	
 }

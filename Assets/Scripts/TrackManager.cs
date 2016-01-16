@@ -9,7 +9,7 @@ public class TrackManager : MonoBehaviour {
     public int maxTracks;
 
     public static float trackWidth;
-    private static List<TrackController> tracks;
+    private static List<TrackController> tracks = new List<TrackController>();
     public int activeTracks {
         get {
             return tracks.Count;
@@ -28,10 +28,10 @@ public class TrackManager : MonoBehaviour {
         float trackPadding = (screenWidth - (trackWidth * maxTracks)) / 2;
         for (int i = 0; i < maxTracks; i++) {
             float trackX = (trackPadding + (i * trackWidth)) - stageDimensions.x;
-
+            
             tracks.Add(Instantiate(trackPrefab, new Vector2(trackX, stageDimensions.y), Quaternion.identity) as TrackController);
         }
-        Debug.Log(tracks);
+
         currentCooldown = baseCooldown;
 
     }
@@ -41,7 +41,7 @@ public class TrackManager : MonoBehaviour {
         currentCooldown -= Time.deltaTime;
 	    if(currentCooldown <= 0) {
             currentCooldown = baseCooldown;
-            
+            tracks[0].spawnTrackNote();
         }
 	}
 }
