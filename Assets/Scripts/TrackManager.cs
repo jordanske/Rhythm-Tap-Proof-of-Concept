@@ -19,6 +19,8 @@ public class TrackManager : MonoBehaviour {
     public float baseCooldown;
     private float currentCooldown;
 
+    private int temp = 0;
+
 	// Use this for initialization
 	void Start () {
         Vector2 stageDimensions = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
@@ -27,7 +29,7 @@ public class TrackManager : MonoBehaviour {
         
         float trackPadding = (screenWidth - (trackWidth * maxTracks)) / 2;
         for (int i = 0; i < maxTracks; i++) {
-            float trackX = (trackPadding + (i * trackWidth)) - stageDimensions.x;
+            float trackX = (trackPadding + (i * trackWidth)) - stageDimensions.x + (trackWidth / 2);
             
             tracks.Add(Instantiate(trackPrefab, new Vector2(trackX, stageDimensions.y), Quaternion.identity) as TrackController);
         }
@@ -41,7 +43,8 @@ public class TrackManager : MonoBehaviour {
         currentCooldown -= Time.deltaTime;
 	    if(currentCooldown <= 0) {
             currentCooldown = baseCooldown;
-            tracks[0].spawnTrackNote();
+            temp = temp >= activeTracks-1 ? 0 : temp + 1 ;
+            tracks[temp].spawnTrackNote();
         }
 	}
 }

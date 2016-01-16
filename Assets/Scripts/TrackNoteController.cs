@@ -7,7 +7,7 @@ public class TrackNoteController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+        gameObject.transform.localScale = new Vector3(TrackManager.trackWidth, 1, 0);
 	}
 	
 	// Update is called once per frame
