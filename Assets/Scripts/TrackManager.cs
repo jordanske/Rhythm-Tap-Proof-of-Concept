@@ -7,7 +7,7 @@ public class TrackManager : MonoBehaviour {
     public TrackController trackPrefab;
     public int trackCount;
     public int maxTracks;
-
+	public static Vector2 stageDimensions;
     public static float trackWidth;
     private static List<TrackController> tracks = new List<TrackController>();
     public int activeTracks {
@@ -23,17 +23,17 @@ public class TrackManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Vector2 stageDimensions = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        stageDimensions = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
         float screenWidth = stageDimensions.x * 2;
         trackWidth = screenWidth / 4;
-        
         float trackPadding = (screenWidth - (trackWidth * maxTracks)) / 2;
         for (int i = 0; i < maxTracks; i++) {
             float trackX = (trackPadding + (i * trackWidth)) - stageDimensions.x + (trackWidth / 2);
             
             tracks.Add(Instantiate(trackPrefab, new Vector2(trackX, stageDimensions.y), Quaternion.identity) as TrackController);
-        }
 
+        }
+	
         currentCooldown = baseCooldown;
 
     }
@@ -46,5 +46,6 @@ public class TrackManager : MonoBehaviour {
             temp = temp >= activeTracks-1 ? 0 : temp + 1 ;
             tracks[temp].spawnTrackNote();
         }
+	
 	}
 }
