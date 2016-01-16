@@ -28,14 +28,10 @@ public class TrackManager : MonoBehaviour {
         trackWidth = screenWidth / 4;
         float trackPadding = (screenWidth - (trackWidth * maxTracks)) / 2;
         for (int i = 0; i < maxTracks; i++) {
-            float trackX = (trackPadding + (i * trackWidth)) - stageDimensions.x + (trackWidth / 2);
-            
-            tracks.Add(Instantiate(trackPrefab, new Vector2(trackX, stageDimensions.y), Quaternion.identity) as TrackController);
-
+            float trackX = (trackPadding + (i * trackWidth)) - stageDimensions.x + (trackWidth / 2);     
+            tracks.Add(Instantiate(trackPrefab, new Vector2(trackX, stageDimensions.y*1.05f), Quaternion.identity) as TrackController);
         }
-	
         currentCooldown = baseCooldown;
-
     }
 	
 	// Update is called once per frame

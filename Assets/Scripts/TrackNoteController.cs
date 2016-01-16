@@ -18,5 +18,6 @@ public class TrackNoteController : MonoBehaviour {
 			Debug.Log("Miss!");
 
 		}
+
 	}
 }
