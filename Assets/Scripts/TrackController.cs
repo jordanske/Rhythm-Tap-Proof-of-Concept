@@ -5,25 +5,25 @@ using System.Collections.Generic;
 public class TrackController : MonoBehaviour {
 
     public TrackNoteController trackNote;
+
 	private List<TrackNoteController> trackNotes = new List<TrackNoteController>();
 
 	void Start () {
 	
 	}
 
-    public void spawnTrackNote() {
-		trackNotes.Add(Instantiate(trackNote, transform.position, transform.rotation) as TrackNoteController);
-		foreach (TrackNoteController o in trackNotes) {
-			print(o);
-		}
+    public void spawnTrackNote () {
+		//trackNotes.Add(Instantiate(trackNote, transform.position, transform.rotation) as TrackNoteController);
+		TrackNoteController newNote = Instantiate(trackNote, transform.position, transform.rotation) as TrackNoteController;
+		newNote.parentTrack = gameObject;
+		trackNotes.Add(newNote);
     }
 		
-
-	void Update () {
-		foreach (TrackNoteController o in trackNotes) {
-			if (o == null) {
-				trackNotes.Remove (o);
-
+	void update(){
+		foreach (TrackNoteController i in trackNotes) {
+			if (i == null) {
+				print(i);
+				trackNotes.Remove(i);
 			}
 		}
 	}

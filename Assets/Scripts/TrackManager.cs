@@ -10,9 +10,7 @@ public class TrackManager : MonoBehaviour {
     public static float trackWidth;
     private static List<TrackController> tracks = new List<TrackController>();
     public int activeTracks {
-        get {
-            return tracks.Count;
-        }
+        get {return tracks.Count;}
     }
     
     public float baseCooldown;
@@ -20,7 +18,6 @@ public class TrackManager : MonoBehaviour {
 
     private int temp = 0;
 
-	// Use this for initialization
 	void Start () {
         stageDimensions = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
         float screenWidth = stageDimensions.x * 2;
@@ -32,14 +29,14 @@ public class TrackManager : MonoBehaviour {
         }
         currentCooldown = baseCooldown;
     }
-	
-	// Update is called once per frame
+
 	void Update () {
         currentCooldown -= Time.deltaTime;
 	    if(currentCooldown <= 0) {
             currentCooldown = baseCooldown;
             temp = temp >= activeTracks-1 ? 0 : temp + 1 ;
             tracks[temp].spawnTrackNote();
+
         }
 	
 	}
