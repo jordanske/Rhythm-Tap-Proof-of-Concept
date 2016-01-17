@@ -6,7 +6,6 @@ public class TrackManager : MonoBehaviour {
 
     public TrackController trackPrefab;
     public int trackCount;
-    public int maxTracks;
 	public static Vector2 stageDimensions;
     public static float trackWidth;
     private static List<TrackController> tracks = new List<TrackController>();
@@ -26,8 +25,8 @@ public class TrackManager : MonoBehaviour {
         stageDimensions = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
         float screenWidth = stageDimensions.x * 2;
         trackWidth = screenWidth / 4;
-        float trackPadding = (screenWidth - (trackWidth * maxTracks)) / 2;
-        for (int i = 0; i < maxTracks; i++) {
+        float trackPadding = (screenWidth - (trackWidth * trackCount)) / 2;
+        for (int i = 0; i < trackCount; i++) {
             float trackX = (trackPadding + (i * trackWidth)) - stageDimensions.x + (trackWidth / 2);     
             tracks.Add(Instantiate(trackPrefab, new Vector2(trackX, stageDimensions.y*1.05f), Quaternion.identity) as TrackController);
         }

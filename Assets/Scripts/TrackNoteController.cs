@@ -15,9 +15,12 @@ public class TrackNoteController : MonoBehaviour {
         gameObject.transform.position += new Vector3(0, -speed * Time.deltaTime, 0);
 		if (gameObject.transform.position.y <= -TrackManager.stageDimensions.y*1.05) {
 			Destroy (gameObject);
-			Debug.Log("Miss!");
+			//Debug.Log("Miss!");
 
 		}
+		//if(Input.GetButtonDown("Fire1"){
+			
+		//}
 
 	}
 }
