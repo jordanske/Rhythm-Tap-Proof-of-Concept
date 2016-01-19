@@ -2,11 +2,8 @@
 using System.Collections;
 
 public class TrackNoteController : MonoBehaviour {
-
-
+    
     public float speed;
-	public float hitbarY;
-	public float hitPercent;
 
 	private GameObject ParentTrack;
 	public GameObject parentTrack{
@@ -15,20 +12,27 @@ public class TrackNoteController : MonoBehaviour {
 	}
 		
 	void Start () {
-        gameObject.transform.localScale = new Vector2(TrackManager.trackWidth, gameObject.transform.localScale.y);
-        //hitbarY = -TrackManager.stageDimensions.y*0.70f;
-        hitbarY = (-GameManager.cameraDimensions.y / 2);
-        //ssht
-        //print(hitbarY);
+        transform.localScale = new Vector2(TrackManager.trackWidth, TrackManager.trackWidth);
     }
 
 	void Update () {
-        gameObject.transform.position += new Vector3(0, -speed * Time.deltaTime, 0);
-		if (gameObject.transform.position.y <= hitbarY*1.05) {
-			// didn't click on note
-			Destroy (gameObject);
-		}
+        float tspeed = GameManager.pause ? 0 : speed ;
+        transform.position += new Vector3(0, -tspeed * Time.deltaTime, 0);
+        
+        if (transform.position.y + (transform.localScale.y / 2) <= (-GameManager.cameraDimensions.y / 2)) {
+            // didn't click on note
+            //Destroy (gameObject);
+            ParentTrack.GetComponent<TrackController>().destroyNote(gameObject);
+        }
 	}
+
+    public float hitRate() {        
+        float relativePosition = TrackManager.hitbar.transform.position.y - transform.position.y;
+        float hitbarHeight = TrackManager.hitbar.transform.localScale.y * TrackManager.hitbar.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+        float percentage = relativePosition / hitbarHeight * 100;
+
+        return percentage;
+    }
 
 	// Clicked on note
 	/*void OnMouseDown(){

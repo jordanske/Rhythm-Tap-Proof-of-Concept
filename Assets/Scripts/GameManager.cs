@@ -42,7 +42,11 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public static bool pause;
+    public bool Pause;
+
     void Start () {
+        
         experience = 0;
         notes = 0;
         TrackManager.trackCount = 3;
@@ -54,6 +58,6 @@ public class GameManager : MonoBehaviour {
     }
 
     void Update () {
-
+        pause = Pause;
     }
 }

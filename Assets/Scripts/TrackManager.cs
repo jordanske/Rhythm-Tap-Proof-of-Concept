@@ -33,11 +33,12 @@ public class TrackManager : MonoBehaviour {
     private int temp = 0;
 
 	void Start () {
-        setHitbar();
         updateTracks();
+        setHitbar();
     }
 
     void Update () {
+        if (GameManager.pause) return;
         if (tracks.Count <= 0) return;
         currentCooldown -= Time.deltaTime;
 	    if(currentCooldown <= 0) {
@@ -49,19 +50,11 @@ public class TrackManager : MonoBehaviour {
 	}
 
     private void setHitbar() {
-        hitbar = Instantiate(hitbarPrefab, Vector2.zero, Quaternion.identity) as GameObject;
+        hitbar = Instantiate(hitbarPrefab, new Vector2(0, (-GameManager.cameraDimensions.y*0.7f) /2), Quaternion.identity) as GameObject;
         Transform hitbarTr = hitbar.GetComponent<Transform>();
         SpriteRenderer hitbarSR = hitbar.GetComponent<SpriteRenderer>();
-
-        var width = hitbarSR.sprite.bounds.size.x;
-
-        SpriteRenderer test = trackPrefab.trackNotePrefab.GetComponent<SpriteRenderer>();
-
-        Debug.Log(width);
-        Debug.Log(test.sprite.bounds.size.x);
-
-        hitbarTr.localScale = new Vector2((float) GameManager.cameraDimensions.x / width, hitbarTr.localScale.y);
-            //GameManager.cameraDimensions.y camera hoogte
+        //Full width: GameManager.cameraDimensions.x
+        hitbarTr.localScale = new Vector2((float) (trackWidth * trackCount) / hitbarSR.sprite.bounds.size.x, TrackManager.trackWidth);
     }
 
     private void updateTracks() {
