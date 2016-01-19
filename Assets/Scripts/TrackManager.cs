@@ -4,33 +4,41 @@ using System.Collections.Generic;
 
 public class TrackManager : MonoBehaviour {
 
+    //Track Prefab
     public TrackController trackPrefab;
-    public int trackCount;
-	public static Vector2 stageDimensions;
+
+    //The hitbar
+    public GameObject hitbarPrefab;
+    public static GameObject hitbar;
+
+    //The width of one track
     public static float trackWidth;
+
+    //Number of track to spawn?
+    public static int trackCount;
+
+    //List containing all track instances
     private static List<TrackController> tracks = new List<TrackController>();
+
+    //Current active tracks
     public int activeTracks {
-        get {return tracks.Count;}
+        get {
+            return tracks.Count;
+        }
     }
     
     public float baseCooldown;
-    private float currentCooldown;
+    private float currentCooldown; //coroutine ?
 
     private int temp = 0;
 
 	void Start () {
-        stageDimensions = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
-        float screenWidth = stageDimensions.x * 2;
-        trackWidth = screenWidth / 4;
-        float trackPadding = (screenWidth - (trackWidth * trackCount)) / 2;
-        for (int i = 0; i < trackCount; i++) {
-            float trackX = (trackPadding + (i * trackWidth)) - stageDimensions.x + (trackWidth / 2);     
-            tracks.Add(Instantiate(trackPrefab, new Vector2(trackX, stageDimensions.y*1.05f), Quaternion.identity) as TrackController);
-        }
-        currentCooldown = baseCooldown;
+        setHitbar();
+        updateTracks();
     }
 
-	void Update () {
+    void Update () {
+        if (tracks.Count <= 0) return;
         currentCooldown -= Time.deltaTime;
 	    if(currentCooldown <= 0) {
             currentCooldown = baseCooldown;
@@ -38,6 +46,31 @@ public class TrackManager : MonoBehaviour {
             tracks[temp].spawnTrackNote();
 
         }
-	
 	}
+
+    private void setHitbar() {
+        hitbar = Instantiate(hitbarPrefab, Vector2.zero, Quaternion.identity) as GameObject;
+        Transform hitbarTr = hitbar.GetComponent<Transform>();
+        SpriteRenderer hitbarSR = hitbar.GetComponent<SpriteRenderer>();
+
+        var width = hitbarSR.sprite.bounds.size.x;
+
+        SpriteRenderer test = trackPrefab.trackNotePrefab.GetComponent<SpriteRenderer>();
+
+        Debug.Log(width);
+        Debug.Log(test.sprite.bounds.size.x);
+
+        hitbarTr.localScale = new Vector2((float) GameManager.cameraDimensions.x / width, hitbarTr.localScale.y);
+            //GameManager.cameraDimensions.y camera hoogte
+    }
+
+    private void updateTracks() {
+        trackWidth = GameManager.cameraDimensions.x / 4;
+        float trackPadding = (GameManager.cameraDimensions.x - (trackWidth * trackCount)) / 2;
+        for (int i = 0; i < trackCount; i++) {
+            float trackX = (trackPadding + (i * trackWidth)) - (GameManager.cameraDimensions.x/2) + (trackWidth / 2);
+            tracks.Add(Instantiate(trackPrefab, new Vector2(trackX, (GameManager.cameraDimensions.y/2) * 1.05f), Quaternion.identity) as TrackController);
+        }
+        currentCooldown = baseCooldown;
+    }
 }

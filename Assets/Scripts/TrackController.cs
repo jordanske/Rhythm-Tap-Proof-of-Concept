@@ -4,17 +4,19 @@ using System.Collections.Generic;
 
 public class TrackController : MonoBehaviour {
 
-    public TrackNoteController trackNote;
+    //Track Note Prefab
+    public TrackNoteController trackNotePrefab;
 
+    //List containing trackNotes instances of this track
 	private List<TrackNoteController> trackNotes = new List<TrackNoteController>();
 
 	void Start () {
-	
+	    
 	}
 
     public void spawnTrackNote () {
 		//trackNotes.Add(Instantiate(trackNote, transform.position, transform.rotation) as TrackNoteController);
-		TrackNoteController newNote = Instantiate(trackNote, transform.position, transform.rotation) as TrackNoteController;
+		TrackNoteController newNote = Instantiate(trackNotePrefab, transform.position, transform.rotation) as TrackNoteController;
 		newNote.parentTrack = gameObject;
 		trackNotes.Add(newNote);
     }
