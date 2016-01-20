@@ -28,8 +28,8 @@ public class TrackNoteController : MonoBehaviour {
 
     public float hitRate() {        
         float relativePosition = TrackManager.hitbar.transform.position.y - transform.position.y;
-        float hitbarHeight = TrackManager.hitbar.transform.localScale.y * TrackManager.hitbar.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
-        float percentage = relativePosition / hitbarHeight * 100;
+        //float hitbarHeight = TrackManager.hitbar.transform.localScale.y * TrackManager.hitbar.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
+        float percentage = relativePosition / TrackManager.hitbarHeight * 100;
 
         return percentage;
     }

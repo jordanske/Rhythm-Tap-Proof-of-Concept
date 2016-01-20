@@ -10,6 +10,7 @@ public class TrackManager : MonoBehaviour {
     //The hitbar
     public GameObject hitbarPrefab;
     public static GameObject hitbar;
+    public static float hitbarHeight;
 
     //The width of one track
     public static float trackWidth;
@@ -50,11 +51,12 @@ public class TrackManager : MonoBehaviour {
 	}
 
     private void setHitbar() {
-        hitbar = Instantiate(hitbarPrefab, new Vector2(0, (-GameManager.cameraDimensions.y*0.7f) /2), Quaternion.identity) as GameObject;
+        hitbar = Instantiate(hitbarPrefab, new Vector3(0, (-GameManager.cameraDimensions.y*0.7f) /2, -10), Quaternion.identity) as GameObject;
         Transform hitbarTr = hitbar.GetComponent<Transform>();
         SpriteRenderer hitbarSR = hitbar.GetComponent<SpriteRenderer>();
         //Full width: GameManager.cameraDimensions.x
         hitbarTr.localScale = new Vector2((float) (trackWidth * trackCount) / hitbarSR.sprite.bounds.size.x, TrackManager.trackWidth);
+        hitbarHeight = hitbar.transform.localScale.y * hitbar.GetComponent<SpriteRenderer>().sprite.bounds.size.y;
     }
 
     private void updateTracks() {
@@ -62,7 +64,7 @@ public class TrackManager : MonoBehaviour {
         float trackPadding = (GameManager.cameraDimensions.x - (trackWidth * trackCount)) / 2;
         for (int i = 0; i < trackCount; i++) {
             float trackX = (trackPadding + (i * trackWidth)) - (GameManager.cameraDimensions.x/2) + (trackWidth / 2);
-            tracks.Add(Instantiate(trackPrefab, new Vector2(trackX, (GameManager.cameraDimensions.y/2) * 1.05f), Quaternion.identity) as TrackController);
+            tracks.Add(Instantiate(trackPrefab, new Vector3(trackX, 0, 0), Quaternion.identity) as TrackController);
         }
         currentCooldown = baseCooldown;
     }

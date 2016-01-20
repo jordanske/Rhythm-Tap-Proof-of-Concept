@@ -17,7 +17,7 @@ public class TrackController : MonoBehaviour {
 
     public void spawnTrackNote () {
 		//trackNotes.Add(Instantiate(trackNote, transform.position, transform.rotation) as TrackNoteController);
-		TrackNoteController newNote = Instantiate(trackNotePrefab, transform.position, transform.rotation) as TrackNoteController;
+		TrackNoteController newNote = Instantiate(trackNotePrefab, new Vector3(transform.position.x, (GameManager.cameraDimensions.y / 2) + TrackManager.hitbarHeight, -20), transform.rotation) as TrackNoteController;
 		newNote.parentTrack = gameObject;
 		trackNotes.Add(newNote);
     }
@@ -36,6 +36,7 @@ public class TrackController : MonoBehaviour {
                 break;
             } else if(hitrate < -100) {
                 Debug.Log("MISS");
+                break;
             }
 
         }
