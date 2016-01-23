@@ -5,45 +5,63 @@ using System.Collections.Generic;
 public class TrackController : MonoBehaviour {
 
     //Track Note Prefab
-    public TrackNoteController trackNotePrefab;
+    public GameObject trackNotePrefab;
 
-    //List containing trackNotes instances of this track
-	private List<TrackNoteController> trackNotes = new List<TrackNoteController>();
+    //Object Pooler containing Track Notes
+    private ObjectPooler trackNotesPooler;
 
 	void Start () {
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
         transform.localScale = new Vector2(TrackManager.trackWidth / sr.sprite.bounds.size.x, GameManager.cameraDimensions.y / sr.sprite.bounds.size.y);
+        trackNotePrefab.transform.localScale = new Vector2(TrackManager.trackWidth, TrackManager.trackWidth);
+
+        trackNotesPooler = Instantiate(GameManager.ObjectPooler) as ObjectPooler;
+        trackNotesPooler.initialize(trackNotePrefab, 4, true);
     }
 
     public void spawnTrackNote () {
-		//trackNotes.Add(Instantiate(trackNote, transform.position, transform.rotation) as TrackNoteController);
-		TrackNoteController newNote = Instantiate(trackNotePrefab, new Vector3(transform.position.x, (GameManager.cameraDimensions.y / 2) + TrackManager.hitbarHeight, -20), transform.rotation) as TrackNoteController;
-		newNote.parentTrack = gameObject;
-		trackNotes.Add(newNote);
-    }
-		
-	void update() {
-
-    }
-
-    void OnMouseDown() {
-        foreach (TrackNoteController trackNote in trackNotes) {
-            float hitrate = trackNote.hitRate();
-            
-            if(Mathf.Abs(hitrate) <= 100) {
-                float perc = (100 - Mathf.Abs(hitrate));
-                Debug.Log("HIT");
-                break;
-            } else if(hitrate < -100) {
-                Debug.Log("MISS");
-                break;
+        if(trackNotesPooler) { 
+            GameObject newNote = trackNotesPooler.getObject();
+            if(newNote) {
+                //newNote.transform.position = new Vector3(transform.position.x, (GameManager.cameraDimensions.y / 2) + TrackManager.hitbarHeight, -4);
+                newNote.GetComponent<TrackNoteController>().reset(transform.position.x);
+                newNote.SetActive(true);
             }
-
         }
     }
+		
+	void update () {
 
-    public void destroyNote(GameObject note) {
-        Destroy(note);
-        trackNotes.RemoveAt(0);
     }
+
+    void OnMouseDown () {
+        //TODO: Enumeration function ? idk, google
+        List<GameObject> trackNotes = trackNotesPooler.PooledObjects;
+        GameObject closest = null;
+        float lastHitrate = -10000;
+        for(int i = 0; i < trackNotes.Count; i++) {
+            if(trackNotes[i].activeInHierarchy) {
+                TrackNoteController trackNote = trackNotes[i].GetComponent<TrackNoteController>();
+                float hitrate = trackNote.hitRate();
+                
+                if(hitrate < 100 && !trackNote.hit) { //Ignore notes below the hitbar
+                    if(hitrate > lastHitrate) {
+                        closest = trackNotes[i];
+                        lastHitrate = hitrate;
+                    }
+                }
+            }
+        }
+
+        if(closest) {
+            if (Mathf.Abs(lastHitrate) <= 100) {
+                float hitPerc = (100 - Mathf.Abs(lastHitrate));
+                TrackManager.current.onNoteHit(closest, hitPerc);
+                return;
+            }
+        }
+        
+        TrackManager.current.onNoteMiss(closest);
+    }
+    
 }

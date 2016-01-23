@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class GameManager : MonoBehaviour {
-    
+
+    public static GameManager current;
+
     //Track Manager Prefab
     public TrackManager trackManagerPrefab;
 
@@ -10,6 +12,10 @@ public class GameManager : MonoBehaviour {
     public static TrackManager trackManager;
 
     public static Vector2 cameraDimensions;
+
+    //Object Pooler Prefab
+    public static ObjectPooler ObjectPooler;
+    public ObjectPooler objectPooler;
 
     //Current experience of the player
     private static int experience;
@@ -45,8 +51,12 @@ public class GameManager : MonoBehaviour {
     public static bool pause;
     public bool Pause;
 
+    void Awake () {
+        current = this;
+    }
+
     void Start () {
-        
+        ObjectPooler = objectPooler;
         experience = 0;
         notes = 0;
         TrackManager.trackCount = 3;
@@ -59,5 +69,17 @@ public class GameManager : MonoBehaviour {
 
     void Update () {
         pause = Pause;
+    }
+
+    public void addExperience(int amount) {
+        if(amount > 0) {
+            experience += amount;
+        }
+    }
+
+    public void addNotes(int amount) {
+        if(amount > 0) {
+            notes += amount;
+        }
     }
 }

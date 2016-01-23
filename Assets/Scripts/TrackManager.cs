@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class TrackManager : MonoBehaviour {
 
+    public static TrackManager current;
+
     //Track Prefab
     public TrackController trackPrefab;
 
@@ -28,30 +30,38 @@ public class TrackManager : MonoBehaviour {
         }
     }
     
-    public float baseCooldown;
-    private float currentCooldown; //coroutine ?
+    public float TimeTillNextNote;
 
     private int temp = 0;
 
-	void Start () {
+    void Awake() {
+        current = this;
+    }
+
+    void Start () {
         updateTracks();
         setHitbar();
+
+        StartCoroutine(spawnNotes());
+    }
+    
+    IEnumerator spawnNotes () {
+        while(true) {
+            if (!GameManager.pause) { //Temporary
+                if (tracks.Count > 0) {
+                    tracks[0].spawnTrackNote();
+                }
+            }
+            yield return new WaitForSeconds(TimeTillNextNote);
+        }
     }
 
     void Update () {
-        if (GameManager.pause) return;
-        if (tracks.Count <= 0) return;
-        currentCooldown -= Time.deltaTime;
-	    if(currentCooldown <= 0) {
-            currentCooldown = baseCooldown;
-            temp = temp >= activeTracks-1 ? 0 : temp + 1 ;
-            tracks[temp].spawnTrackNote();
 
-        }
 	}
 
     private void setHitbar() {
-        hitbar = Instantiate(hitbarPrefab, new Vector3(0, (-GameManager.cameraDimensions.y*0.7f) /2, -10), Quaternion.identity) as GameObject;
+        hitbar = Instantiate(hitbarPrefab, new Vector3(0, (-GameManager.cameraDimensions.y*0.7f) /2, -2), Quaternion.identity) as GameObject;
         Transform hitbarTr = hitbar.GetComponent<Transform>();
         SpriteRenderer hitbarSR = hitbar.GetComponent<SpriteRenderer>();
         //Full width: GameManager.cameraDimensions.x
@@ -66,6 +76,14 @@ public class TrackManager : MonoBehaviour {
             float trackX = (trackPadding + (i * trackWidth)) - (GameManager.cameraDimensions.x/2) + (trackWidth / 2);
             tracks.Add(Instantiate(trackPrefab, new Vector3(trackX, 0, 0), Quaternion.identity) as TrackController);
         }
-        currentCooldown = baseCooldown;
+    }
+
+    public void onNoteHit(GameObject note, float hitPerc) {
+        note.GetComponent<TrackNoteController>().hit = true;
+        Debug.Log("HIT");
+    }
+
+    public void onNoteMiss(GameObject note) {
+        Debug.Log("Miss");
     }
 }
