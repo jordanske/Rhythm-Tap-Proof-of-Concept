@@ -25,7 +25,6 @@ public class TrackController : MonoBehaviour {
             if(newNote) {
                 //newNote.transform.position = new Vector3(transform.position.x, (GameManager.cameraDimensions.y / 2) + TrackManager.hitbarHeight, -4);
                 newNote.GetComponent<TrackNoteController>().reset(transform.position.x);
-				newNote.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f); // Transparency reset
                 newNote.SetActive(true);
             }
         }
@@ -56,13 +55,14 @@ public class TrackController : MonoBehaviour {
 
         if(closest) {
             if (Mathf.Abs(lastHitrate) <= 100) {
-                float hitPerc = (100 - Mathf.Abs(lastHitrate));
+                float hitPerc = (100 - Mathf.Abs(lastHitrate)) / 100;
                 TrackManager.current.onNoteHit(closest, hitPerc);
                 return;
             }
         }
-        
-        TrackManager.current.onNoteMiss(closest);
+
+        TrackManager.current.onNoteMiss(null);
+        //TrackManager.current.onNoteMiss(closest);
     }
     
 }

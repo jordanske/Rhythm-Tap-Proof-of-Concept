@@ -3,7 +3,6 @@ using System.Collections;
 
 public class TrackNoteController : MonoBehaviour {
     
-    public float speed;
     public bool hit = false;
     public bool missed = false;
 
@@ -12,14 +11,14 @@ public class TrackNoteController : MonoBehaviour {
     }
 
     public void reset(float x) {
-        transform.position = new Vector3(x, (GameManager.cameraDimensions.y / 2) + TrackManager.hitbarHeight, -4);
+        transform.position = new Vector3(x, (GameManager.cameraDimensions.y / 2) + TrackManager.hitbarHeight, 0);
+        gameObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f); // Transparency reset
         hit = false;
         missed = false;
     }
 
 	void Update () {
-        float tspeed = GameManager.pause ? 0 : speed ; //Temporary
-        transform.position += new Vector3(0, -tspeed * Time.deltaTime, 0);
+        transform.position += new Vector3(0, -TrackManager.trackSpeed * Time.deltaTime, 0);
         
         float hitrate = hitRate();
         if(hitrate > 100 && !hit && !missed) {
@@ -38,5 +37,9 @@ public class TrackNoteController : MonoBehaviour {
 
         return percentage;
     }
-    
+
+    void Destroy() {
+        gameObject.SetActive(false);
+    }
+
 }

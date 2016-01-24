@@ -19,35 +19,25 @@ public class GameManager : MonoBehaviour {
 
     //Current experience of the player
     private static int experience;
-    public int Experience {
-        get {
-            return experience;
-        }
-        set {
-            experience = value;
-        }
-    }
 
     //Calculates the current level of the player based on current experience
-    public int Level {
+    public static int Level {
         get {
             return (int) (Mathf.Floor(25 + Mathf.Sqrt(625 + 100 * experience)) / 50);
         }
         //Level is not settable
     }
-
-    //Friendly reminder : notes != trackNotes !
+    
     //Current notes of the player, currency in this game
     private static int notes;
-    public int Notes {
-        get {
-            return notes;
-        }
-        set {
-            notes = value;
-        }
-    }
 
+    //Combo modifier
+    public static float combo;
+
+    public static int notesPerTap;
+    public static int experiencePerTap;
+
+    //Temporary
     public static bool pause;
     public bool Pause;
 
@@ -59,6 +49,9 @@ public class GameManager : MonoBehaviour {
         ObjectPooler = objectPooler;
         experience = 0;
         notes = 0;
+        combo = 1.00f;
+        notesPerTap = 1;
+        experiencePerTap = 1;
         TrackManager.trackCount = 3;
         
         cameraDimensions = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)) - Camera.main.ScreenToWorldPoint(Vector2.zero);
@@ -71,15 +64,26 @@ public class GameManager : MonoBehaviour {
         pause = Pause;
     }
 
-    public void addExperience(int amount) {
+    public static void addExperience(int amount) {
         if(amount > 0) {
-            experience += amount;
+            experience += (int) (amount * (GameManager.combo * 2f));
         }
     }
 
-    public void addNotes(int amount) {
+    public static void addNotes(int amount) {
         if(amount > 0) {
-            notes += amount;
+            notes += (int) (amount * (GameManager.combo * 1f));
         }
+    }
+
+    //Temporary
+    void OnGUI() {
+        GUI.Box(new Rect(10, 10, 100, 20), "Notes: " + notes.ToString());
+        GUI.Box(new Rect(10, 32, 100, 20), "Experience: " + experience.ToString());
+        GUI.Box(new Rect(10, 54, 100, 20), "Level: " + Level.ToString());
+        GUI.Box(new Rect(10, 76, 100, 20), "Combo: " + combo.ToString());
+        
+        GUI.Box(new Rect(10, 100, 100, 20), "trackSpeed: " + TrackManager.trackSpeed.ToString());
+        GUI.Box(new Rect(10, 122, 100, 20), "ttnNote: " + TrackManager.TimeTillNextNote.ToString());
     }
 }

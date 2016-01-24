@@ -9,6 +9,8 @@ public class TrackManager : MonoBehaviour {
     //Track Prefab
     public TrackController trackPrefab;
 
+    public GameObject noteEffectPrefab;
+
     //The hitbar
     public GameObject hitbarPrefab;
     public static GameObject hitbar;
@@ -29,16 +31,33 @@ public class TrackManager : MonoBehaviour {
             return tracks.Count;
         }
     }
-    
-    public float TimeTillNextNote;
 
-    private int temp = 0;
+    public static float trackSpeed {
+        get {
+            return GameManager.pause ? 0 : (GameManager.combo * 3); //Temporary
+            //return GameManager.combo * 2;
+        }
+    }
+    
+    public static float TimeTillNextNote {
+        get {
+            //Hoe hoger speed, hoe lager dit. Hoe berekenen ? xD
+
+            return trackSpeed / 2;
+        }
+    }
+
+
+    private ObjectPooler noteEffectsPooler;
 
     void Awake() {
         current = this;
     }
 
     void Start () {
+        noteEffectsPooler = Instantiate(GameManager.ObjectPooler) as ObjectPooler;
+        noteEffectsPooler.initialize(noteEffectPrefab, 4, true);
+
         updateTracks();
         setHitbar();
 
@@ -53,7 +72,8 @@ public class TrackManager : MonoBehaviour {
 
                 }
             }
-            yield return new WaitForSeconds(TimeTillNextNote);
+
+            yield return new WaitForSeconds(TimeTillNextNote * 2f);
         }
     }
 
@@ -62,7 +82,7 @@ public class TrackManager : MonoBehaviour {
 	}
 
     private void setHitbar() {
-        hitbar = Instantiate(hitbarPrefab, new Vector3(0, (-GameManager.cameraDimensions.y*0.7f) /2, -2), Quaternion.identity) as GameObject;
+        hitbar = Instantiate(hitbarPrefab, new Vector3(0, (-GameManager.cameraDimensions.y*0.7f) /2, 0), Quaternion.identity) as GameObject;
         Transform hitbarTr = hitbar.GetComponent<Transform>();
         SpriteRenderer hitbarSR = hitbar.GetComponent<SpriteRenderer>();
         //Full width: GameManager.cameraDimensions.x
@@ -83,9 +103,32 @@ public class TrackManager : MonoBehaviour {
         note.GetComponent<TrackNoteController>().hit = true;
 		note.GetComponent<SpriteRenderer>().color = new Color(0f, 1f, 0f, 0.4f); // Transparency on hit
 		Debug.Log("HIT " + hitPerc);
+          
+        GameManager.combo += (0.02f * (1f + (0.1f * GameManager.combo)));
+
+        GameManager.addNotes((int) Mathf.Ceil(GameManager.notesPerTap * hitPerc));
+        GameManager.addExperience((int) Mathf.Ceil(GameManager.experiencePerTap * hitPerc));
+
+        if (noteEffectsPooler) {
+            GameObject noteEffect = noteEffectsPooler.getObject();
+            if (noteEffect) {
+                noteEffect.GetComponent<NoteEffectController>().setSprite(Camera.main.ScreenToWorldPoint(Input.mousePosition), hitPerc);
+                noteEffect.SetActive(true);
+            }
+        }
     }
 
     public void onNoteMiss(GameObject note) {
-        Debug.Log("Miss");
+        GameManager.combo = ((GameManager.combo - 1) * 0.5f) + 1;
+        Debug.Log("MISU");
+        
+        if (noteEffectsPooler) {
+            GameObject noteEffect = noteEffectsPooler.getObject();
+            if (noteEffect) {
+                Vector3 position = note ? note.transform.position : Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                noteEffect.GetComponent<NoteEffectController>().setSprite(position, 0);
+                noteEffect.SetActive(true);
+            }
+        }
     }
 }
