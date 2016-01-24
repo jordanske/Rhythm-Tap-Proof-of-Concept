@@ -50,6 +50,7 @@ public class TrackManager : MonoBehaviour {
             if (!GameManager.pause) { //Temporary
                 if (tracks.Count > 0) {
                     tracks[0].spawnTrackNote();
+
                 }
             }
             yield return new WaitForSeconds(TimeTillNextNote);
@@ -80,7 +81,8 @@ public class TrackManager : MonoBehaviour {
 
     public void onNoteHit(GameObject note, float hitPerc) {
         note.GetComponent<TrackNoteController>().hit = true;
-        Debug.Log("HIT");
+		note.GetComponent<SpriteRenderer>().color = new Color(0f, 1f, 0f, 0.4f); // Transparency on hit
+		Debug.Log("HIT " + hitPerc);
     }
 
     public void onNoteMiss(GameObject note) {

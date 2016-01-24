@@ -25,6 +25,7 @@ public class TrackController : MonoBehaviour {
             if(newNote) {
                 //newNote.transform.position = new Vector3(transform.position.x, (GameManager.cameraDimensions.y / 2) + TrackManager.hitbarHeight, -4);
                 newNote.GetComponent<TrackNoteController>().reset(transform.position.x);
+				newNote.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f); // Transparency reset
                 newNote.SetActive(true);
             }
         }
