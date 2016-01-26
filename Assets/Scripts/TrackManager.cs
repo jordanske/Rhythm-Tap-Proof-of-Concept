@@ -32,6 +32,7 @@ public class TrackManager : MonoBehaviour {
         }
     }
 
+    //bepaald de snelheid dat de tracks omlaag komen
     public static float trackSpeed {
         get {
             return GameManager.pause ? 0 : (GameManager.combo * 3); //Temporary
@@ -39,11 +40,12 @@ public class TrackManager : MonoBehaviour {
         }
     }
     
+    //tijd tussen tracks
     public static float TimeTillNextNote {
         get {
             //Hoe hoger speed, hoe lager dit. Hoe berekenen ? xD
-
-            return trackSpeed / 2;
+            return 1;
+            return 0.01f;
         }
     }
 
@@ -100,6 +102,7 @@ public class TrackManager : MonoBehaviour {
     }
 
     public void onNoteHit(GameObject note, float hitPerc) {
+        note.GetComponent<TrackNoteController>().playTone();
         note.GetComponent<TrackNoteController>().hit = true;
 		note.GetComponent<SpriteRenderer>().color = new Color(0f, 1f, 0f, 0.4f); // Transparency on hit
 		Debug.Log("HIT " + hitPerc);

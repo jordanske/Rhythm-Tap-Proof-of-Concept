@@ -6,11 +6,14 @@ public class TrackNoteController : MonoBehaviour {
     public bool hit = false;
     public bool missed = false;
 
+    public int semitone;
+
     void Start () {
 
     }
 
-    public void reset(float x) {
+    public void reset(float x, int Semitone) {
+        semitone = Semitone;
         transform.position = new Vector3(x, (GameManager.cameraDimensions.y / 2) + TrackManager.hitbarHeight, 0);
         gameObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f); // Transparency reset
         hit = false;
@@ -27,7 +30,8 @@ public class TrackNoteController : MonoBehaviour {
         }
 
         if (transform.position.y + (transform.localScale.y / 2) <= (-GameManager.cameraDimensions.y / 2)) {
-            gameObject.SetActive(false);
+            if(!GetComponent<AudioSource>().isPlaying)
+                gameObject.SetActive(false);
         }
 	}
 
@@ -36,6 +40,12 @@ public class TrackNoteController : MonoBehaviour {
         float percentage = relativePosition / TrackManager.hitbarHeight * 100;
 
         return percentage;
+    }
+    
+    public void playTone() {
+        AudioSource audioSource = GetComponent<AudioSource>();
+        audioSource.pitch = Mathf.Pow(2, semitone / 12.0f);
+        audioSource.Play();
     }
 
     void Destroy() {

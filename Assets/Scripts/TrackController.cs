@@ -24,7 +24,7 @@ public class TrackController : MonoBehaviour {
             GameObject newNote = trackNotesPooler.getObject();
             if(newNote) {
                 //newNote.transform.position = new Vector3(transform.position.x, (GameManager.cameraDimensions.y / 2) + TrackManager.hitbarHeight, -4);
-                newNote.GetComponent<TrackNoteController>().reset(transform.position.x);
+                newNote.GetComponent<TrackNoteController>().reset(transform.position.x, (int)Random.Range(-10f, 10f));
                 newNote.SetActive(true);
             }
         }
