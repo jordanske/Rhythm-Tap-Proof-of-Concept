@@ -36,6 +36,7 @@ public class TrackManager : MonoBehaviour {
     public static float trackSpeed {
         get {
             float speed = Mathf.Pow(GameManager.combo * 1.8f, 0.7f);
+            speed = 20;
             return GameManager.pause ? 0 : speed; //Temporary
             //return GameManager.combo * 2;
         }
@@ -45,7 +46,7 @@ public class TrackManager : MonoBehaviour {
     public static float TimeTillNextNote {
         get {
             //Hoe hoger speed, hoe lager dit. Hoe berekenen ? xD
-            return 1f;
+            return 0.5f;
         }
     }
 
@@ -73,8 +74,11 @@ public class TrackManager : MonoBehaviour {
                 if (tracks.Count > 0) {
                     SongNote nextNote = SongLoader.nextNote();
                     TTNNModifier = nextNote.length;
+                    int t = 0;
                     foreach (int note in nextNote.notes) {
-                        tracks[0].spawnTrackNote(note);
+                        //if (t==0)
+                        tracks[t].spawnTrackNote(note);
+                        t++;
                     }
                 }
             }

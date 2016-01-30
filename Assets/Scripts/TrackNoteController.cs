@@ -25,7 +25,8 @@ public class TrackNoteController : MonoBehaviour {
         
         float hitrate = hitRate();
         if(hitrate > 100 && !hit && !missed) {
-            TrackManager.current.onNoteMiss(gameObject);
+            //TrackManager.current.onNoteMiss(gameObject);
+            TrackManager.current.onNoteHit(gameObject, 100);
             missed = true;
         }
 
