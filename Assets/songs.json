@@ -1,0 +1,61 @@
+﻿{
+	"version": "1",
+	"game_version": "1.0.0",
+	"songs": [
+		{
+			"id": 1,
+			"name": "ladder",
+			"length": 10,
+			"notes": [
+				{
+					"tones": [1],
+					"length": 1
+				},
+				{
+					"tones": [2],
+					"length": 1
+				},
+				{
+					"tones": [3],
+					"length": 1
+				},
+				{
+					"tones": [4],
+					"length": 1
+				},
+				{
+					"tones": [5],
+					"length": 1
+				},
+				{
+					"tones": [6],
+					"length": 1
+				},
+				{
+					"tones": [5],
+					"length": 1
+				},
+				{
+					"tones": [4],
+					"length": 1
+				},
+				{
+					"tones": [3],
+					"length": 1
+				},
+				{
+					"tones": [2],
+					"length": 0.5
+				},
+				{
+					"tones": [1],
+					"length": 0.5
+				},
+				{
+					"tones": [1],
+					"length": 1
+				}
+			]
+		}
+	]
+}

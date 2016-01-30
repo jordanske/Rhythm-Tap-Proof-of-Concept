@@ -19,12 +19,12 @@ public class TrackController : MonoBehaviour {
         trackNotesPooler.initialize(trackNotePrefab, 4, true);
     }
 
-    public void spawnTrackNote () {
+    public void spawnTrackNote (int tone) {
         if(trackNotesPooler) { 
             GameObject newNote = trackNotesPooler.getObject();
             if(newNote) {
                 //newNote.transform.position = new Vector3(transform.position.x, (GameManager.cameraDimensions.y / 2) + TrackManager.hitbarHeight, -4);
-                newNote.GetComponent<TrackNoteController>().reset(transform.position.x, (int)Random.Range(-10f, 10f));
+                newNote.GetComponent<TrackNoteController>().reset(transform.position.x, tone); //(int)Random.Range(-10f, 10f)
                 newNote.SetActive(true);
             }
         }

@@ -37,6 +37,9 @@ public class GameManager : MonoBehaviour {
     public static int notesPerTap;
     public static int experiencePerTap;
 
+    public static TextAsset SongList;
+    public TextAsset songList;
+
     //Temporary
     public static bool pause;
     public bool Pause;
@@ -47,6 +50,7 @@ public class GameManager : MonoBehaviour {
 
     void Start () {
         ObjectPooler = objectPooler;
+        SongList = songList;
         experience = 0;
         notes = 0;
         combo = 1.00f;
@@ -57,7 +61,8 @@ public class GameManager : MonoBehaviour {
         cameraDimensions = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)) - Camera.main.ScreenToWorldPoint(Vector2.zero);
         
         trackManager = Instantiate(trackManagerPrefab, Vector2.zero, Quaternion.identity) as TrackManager;
-        
+
+        SongLoader.initialize();
     }
 
     void Update () {
